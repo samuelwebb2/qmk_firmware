@@ -3,3 +3,4 @@ ifeq ($(strip $(AUDIO_ENABLE)), yes)
 endif
 
 CAPS_WORD_ENABLE = yes
+REPEAT_KEY_ENABLE = yes

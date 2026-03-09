@@ -12,6 +12,10 @@
 #include QMK_KEYBOARD_H
 #include "keymap_uk.h"
 
+#ifdef AUDIO_ENABLE
+#    include "muse.h"
+#endif
+
 // ── Custom keycodes ───────────────────────────────────────────────────────────
 // UK_GESC: UK-aware reimplementation of QK_GESC with full per-modifier logic.
 //
@@ -79,6 +83,9 @@ enum layers {
     _ADJUST,
 };
 
+#define QWERTY PDF(_QWERTY)
+#define COLEMAK PDF(_COLEMAK)
+
 // ── Keymap ────────────────────────────────────────────────────────────────────
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -90,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |  [   |  Z   |  X   |  C   |  V   |  B   |  N   |  M   |  ,   |  .   |  /   |  ]  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
-     * |      | Copy | Pste | LGUI |LT3/↵ |LT2/⌫ |LT2/SP|LT3/↵ | RALT | Vol- | Vol+ |LT4/⏵|
+     * | REPT | Copy | Pste | LGUI |LT3/↵ |LT2/⌫ |LT2/SP|LT3/↵ | RALT | Vol- | Vol+ |LT4/⏵|
      * `-----------------------------------------------------------------------------------'
      *
      * UK_BSLS = \ on a UK OS layout (KC_BSLS would give # instead).
@@ -106,7 +113,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LBRC, KC_Z,          KC_X,          KC_C,          KC_V,          KC_B,
         KC_N,    KC_M,          KC_COMM,       KC_DOT,        KC_SLSH,       KC_RBRC,
 
-        KC_NO,   KC_COPY,       KC_PSTE,       KC_LGUI,       LT(_SYM,KC_ENT),  LT(_NAV,KC_BSPC),
+        QK_REP,  KC_COPY,       KC_PSTE,       KC_LGUI,       LT(_SYM,KC_ENT),  LT(_NAV,KC_BSPC),
         LT(_NAV,KC_SPC), LT(_SYM,KC_ENT), KC_RALT, KC_VOLD, KC_VOLU, LT(_ADJUST,KC_MPLY)
     ),
 
@@ -198,11 +205,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS, MO(_ADJUST),   KC_TRNS,       KC_NO,         KC_NO,         KC_NO
     ),
 
-    /* Layer 4 — Adjust  (reached by holding both LT3 and MO4 at once)
+    /* Layer 4 — Adjust  (reached by holding both LT3 and MO4 at once or by holding play)
      * ,-----------------------------------------------------------------------------------.
-     * |      | BOOT |DBTOG |      |      |      |      |      |      |      |      | Del  |
+     * | MAKE | BOOT |DBTOG |      |      |      |      |      |      |      |      | Del  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
-     * |      |      |      |      |      |AGNORM|AGSWAP| DF(0)| DF(1)|      |      |      |
+     * |      |      |      |      |      |CGNORM|CGSWAP|QWERTY|COLEMA|     |      |      |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |      |      |      |      |      |      |      |      |      |      |      |      |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -210,11 +217,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * `-----------------------------------------------------------------------------------'
      */
     [_ADJUST] = LAYOUT_ortho_4x12(
-        KC_NO,   QK_BOOT, DB_TOGG, KC_NO,   KC_NO,   KC_NO,
+        QK_MAKE, QK_BOOT, DB_TOGG, KC_NO,   KC_NO,   KC_NO,
         KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_DEL,
 
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   AG_NORM,
-        AG_SWAP, DF(0),   DF(1),   KC_NO,   KC_NO,   KC_NO,
+        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   CG_NORM,
+        CG_SWAP, QWERTY,  COLEMAK, KC_NO,   KC_NO,   KC_NO,
 
         KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
         KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
