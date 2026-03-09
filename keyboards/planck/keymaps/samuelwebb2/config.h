@@ -1,49 +1,21 @@
-/* Copyright 2015-2021 Jack Humbert
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+// config.h — sammy_plank keymap for planck/rev6
 #pragma once
 
-#ifdef AUDIO_ENABLE
-#    define STARTUP_SONG SONG(PLANCK_SOUND)
-// #define STARTUP_SONG SONG(NO_SOUND)
+// ── Tapping term ─────────────────────────────────────────────────────────────
+// Global tapping term (ms). Tap within this window → tap, hold beyond → hold.
+#define TAPPING_TERM 200
 
-#    define DEFAULT_LAYER_SONGS \
-        { SONG(QWERTY_SOUND), SONG(COLEMAK_SOUND), SONG(DVORAK_SOUND) }
-#endif
+// Per-key tapping term support — override get_tapping_term() in keymap.c
+// if you ever want different timings for specific keys.
+#define TAPPING_TERM_PER_KEY
 
-/*
- * MIDI options
- */
+// Prevent accidental mod activation when rolling keys quickly.
+#define PERMISSIVE_HOLD
 
-/* enable basic MIDI features:
-   - MIDI notes can be sent when in Music mode is on
-*/
+// ── One-shot keys ─────────────────────────────────────────────────────────────
+// How long a one-shot modifier stays active after being tapped (ms).
+#define ONESHOT_TIMEOUT 3000
 
-#define MIDI_BASIC
-
-/* enable advanced MIDI features:
-   - MIDI notes can be added to the keymap
-   - Octave shift and transpose
-   - Virtual sustain, portamento, and modulation wheel
-   - etc.
-*/
-//#define MIDI_ADVANCED
-
-/* override number of MIDI tone keycodes (each octave adds 12 keycodes and allocates 12 bytes) */
-//#define MIDI_TONE_KEYCODE_OCTAVES 2
-
-// Most tactile encoders have detents every 4 stages
-#define ENCODER_RESOLUTION 4
+// ── Caps Word ─────────────────────────────────────────────────────────────────
+#define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
+#define CAPS_WORD_INVERT_ON_SHIFT
