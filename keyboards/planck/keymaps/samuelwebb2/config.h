@@ -16,6 +16,6 @@
 // How long a one-shot modifier stays active after being tapped (ms).
 #define ONESHOT_TIMEOUT 3000
 
-// ── Caps Word ─────────────────────────────────────────────────────────────────
+// ── Caps Word ────────────────────────────────────────────────────────────────
 #define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
 #define CAPS_WORD_INVERT_ON_SHIFT
