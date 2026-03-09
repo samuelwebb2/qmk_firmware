@@ -90,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |  [   |  Z   |  X   |  C   |  V   |  B   |  N   |  M   |  ,   |  .   |  /   |  ]  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
-     * |      | Copy | Pste | LGUI |LT3/↵ |LT2/⌫ |LT2/SP|LT3/↵ | LALT | Vol- | Vol+ |LT4/⏵|
+     * |      | Copy | Pste | LGUI |LT3/↵ |LT2/⌫ |LT2/SP|LT3/↵ | RALT | Vol- | Vol+ |LT4/⏵|
      * `-----------------------------------------------------------------------------------'
      *
      * UK_BSLS = \ on a UK OS layout (KC_BSLS would give # instead).
@@ -101,13 +101,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Y,    KC_U,          KC_I,          KC_O,          KC_P,          UK_BSLS,
 
         UK_GESC, LCTL_T(KC_A),  LALT_T(KC_S),  LGUI_T(KC_D),  LSFT_T(KC_F),  KC_G,
-        KC_H,    RSFT_T(KC_J),  RGUI_T(KC_K),  RALT_T(KC_L),  RCTL_T(KC_SCLN), KC_QUOT,
+        KC_H,    RSFT_T(KC_J),  RGUI_T(KC_K),  LALT_T(KC_L),  RCTL_T(KC_SCLN), UK_QUOT,
 
         KC_LBRC, KC_Z,          KC_X,          KC_C,          KC_V,          KC_B,
         KC_N,    KC_M,          KC_COMM,       KC_DOT,        KC_SLSH,       KC_RBRC,
 
         KC_NO,   KC_COPY,       KC_PSTE,       KC_LGUI,       LT(_SYM,KC_ENT),  LT(_NAV,KC_BSPC),
-        LT(_NAV,KC_SPC), LT(_SYM,KC_ENT), KC_LALT, KC_VOLD, KC_VOLU, LT(_ADJUST,KC_MPLY)
+        LT(_NAV,KC_SPC), LT(_SYM,KC_ENT), KC_RALT, KC_VOLD, KC_VOLU, LT(_ADJUST,KC_MPLY)
     ),
 
     /* Layer 1 — Colemak-DH
@@ -162,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     /* Layer 3 — Symbols / Numbers  (British English layout)
      * ,-----------------------------------------------------------------------------------.
-     * | Tab  |  !   |  @   |  #   |  $   |  %   |  ^   |  &   |  *   |  (   |  )   |  |  |
+     * | Tab  |  !   |  "   |  #   |  $   |  %   |  ^   |  &   |  *   |  (   |  )   |  |  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * | Del  |1/CTL |2/ALT |3/GUI |4/SFT |  5   |  6   |7/SFT |8/GUI |9/ALT |0/CTL |  =  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -185,7 +185,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ~ is not needed here — use Shift+UK_GESC or Shift+` from this layer.
      */
     [_SYM] = LAYOUT_ortho_4x12(
-        KC_TAB,  KC_EXLM,       UK_AT,         UK_HASH,       KC_DLR,        KC_PERC,
+        KC_TAB,  KC_EXLM,       UK_DQUO,         UK_HASH,       KC_DLR,        KC_PERC,
         KC_CIRC, KC_AMPR,       KC_ASTR,       KC_LPRN,       KC_RPRN,       UK_PIPE,
 
         KC_DEL,  LCTL_T(KC_1),  LALT_T(KC_2),  LGUI_T(KC_3),  LSFT_T(KC_4),  KC_5,
