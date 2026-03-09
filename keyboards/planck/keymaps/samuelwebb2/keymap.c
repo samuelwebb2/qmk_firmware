@@ -126,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_J,    KC_L,          KC_U,          KC_Y,          KC_SCLN,       KC_TRNS,
 
         KC_TRNS, LCTL_T(KC_A),  LALT_T(KC_R),  LGUI_T(KC_S),  LSFT_T(KC_T),  KC_G,
-        KC_M,    RSFT_T(KC_N),  RGUI_T(KC_E),  RALT_T(KC_I),  RCTL_T(KC_O),  KC_TRNS,
+        KC_M,    RSFT_T(KC_N),  RGUI_T(KC_E),  LALT_T(KC_I),  RCTL_T(KC_O),  KC_TRNS,
 
         KC_TRNS, KC_Z,          KC_X,          KC_C,          KC_D,          KC_V,
         KC_K,    KC_H,          KC_COMM,       KC_DOT,        KC_SLSH,       KC_TRNS,
@@ -189,7 +189,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_CIRC, KC_AMPR,       KC_ASTR,       KC_LPRN,       KC_RPRN,       UK_PIPE,
 
         KC_DEL,  LCTL_T(KC_1),  LALT_T(KC_2),  LGUI_T(KC_3),  LSFT_T(KC_4),  KC_5,
-        KC_6,    RSFT_T(KC_7),  RGUI_T(KC_8),  RALT_T(KC_9),  RCTL_T(KC_0),  KC_EQL,
+        KC_6,    RSFT_T(KC_7),  RGUI_T(KC_8),  LALT_T(KC_9),  RCTL_T(KC_0),  KC_EQL,
 
         UK_LCBR, UK_TILD,       UK_PND,        UK_EURO,       KC_UNDS,       UK_GRV,
         KC_PLUS, KC_MINS,       KC_COMM,       KC_DOT,        KC_SLSH,       UK_RCBR,
