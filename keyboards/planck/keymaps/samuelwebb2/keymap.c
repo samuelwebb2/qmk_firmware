@@ -13,37 +13,59 @@
 #include "keymap_uk.h"
 
 // ── Custom keycodes ───────────────────────────────────────────────────────────
-// UK_GESC: replacement for QK_GESC that behaves correctly on a UK OS layout.
-//   Tap        → ` (UK_GRV)
-//   Shift+tap  → ~ (UK_TILD)
-//   GUI+tap    → Esc
-// QK_GESC is not used because when shifted it sends KC_TILD = Shift+` which
-// on a UK layout produces ¬ instead of ~.
+// UK_GESC: UK-aware reimplementation of QK_GESC with full per-modifier logic.
+//
+//   Modifier held   Key registered         OS output (UK layout)
+//   ─────────────   ──────────────         ─────────────────────
+//   none            KC_ESCAPE              Escape
+//   Shift           KC_NUHS (w/ shift)     ~ (UK_TILD = Shift+KC_NUHS)
+//   GUI             KC_GRAVE               ` (GUI+` for window switching etc.)
+//   Ctrl            KC_GRAVE (w/ ctrl)     Ctrl+` (terminal shortcuts etc.)
+//   Alt             KC_ESCAPE (w/ alt)     Alt+Esc (preserve OS shortcut)
+//
+//   Vanilla QK_GESC uses MOD_MASK_SG (Shift|GUI) to decide between grave and
+//   escape, which means Ctrl always sends Escape — breaking Ctrl+` shortcuts.
+//   This implementation handles each modifier explicitly.
+//
+//   On UK layout KC_GRAVE = ` correctly, but Shift+KC_GRAVE = ¬ (not ~).
+//   ~ requires Shift+KC_NUHS instead (that is how UK_TILD is defined).
+//   We track what was registered on press so release unregisters the same key.
 enum custom_keycodes {
     UK_GESC = SAFE_RANGE,
 };
 
+// Tracks which key was registered on press for correct release handling.
+typedef enum { GESC_ESC, GESC_GRAVE, GESC_TILD } uk_gesc_state_t;
+static uk_gesc_state_t uk_gesc_pressed = GESC_ESC;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case UK_GESC: {
-            if (record->event.pressed) {
-                uint8_t mods = get_mods() | get_oneshot_mods();
-                if (mods & MOD_MASK_GUI) {
-                    // GUI held → send Escape
-                    tap_code(KC_ESC);
-                } else if (mods & MOD_MASK_SHIFT) {
-                    // Shift held → send ~ (UK_TILD = Shift+KC_NUHS on UK layout)
-                    // Temporarily clear shift so UK_TILD macro can apply its own
-                    del_mods(MOD_MASK_SHIFT);
-                    tap_code16(UK_TILD);
-                    set_mods(mods);
-                } else {
-                    // Plain tap → `
-                    tap_code(UK_GRV);
-                }
+    if (keycode == UK_GESC) {
+        const uint8_t mods = get_mods();
+
+        if (record->event.pressed) {
+            if (mods & MOD_MASK_SHIFT) {
+                // Shift held → ~ (Shift+KC_NUHS; shift is already in the report)
+                uk_gesc_pressed = GESC_TILD;
+                add_key(KC_NUHS);
+            } else if (mods & (MOD_MASK_GUI | MOD_MASK_CTRL)) {
+                // GUI or Ctrl held → ` (KC_GRAVE; modifier stays in the report)
+                uk_gesc_pressed = GESC_GRAVE;
+                add_key(KC_GRAVE);
+            } else {
+                // No relevant modifier (includes Alt+Esc) → Escape
+                uk_gesc_pressed = GESC_ESC;
+                add_key(KC_ESCAPE);
             }
-            return false;
+        } else {
+            switch (uk_gesc_pressed) {
+                case GESC_TILD:  del_key(KC_NUHS);   break;
+                case GESC_GRAVE: del_key(KC_GRAVE);  break;
+                case GESC_ESC:   del_key(KC_ESCAPE); break;
+            }
         }
+
+        send_keyboard_report();
+        return false;
     }
     return true;
 }
@@ -72,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * `-----------------------------------------------------------------------------------'
      *
      * UK_BSLS = \ on a UK OS layout (KC_BSLS would give # instead).
-     * UK_GESC = custom Esc/`/~ key (see process_record_user above).
+     * UK_GESC = Esc (plain) | ~ (Shift) | ` (GUI) | Ctrl+` (Ctrl) | Alt+Esc (Alt)
      */
     [_QWERTY] = LAYOUT_ortho_4x12(
         KC_TAB,  KC_Q,          KC_W,          KC_E,          KC_R,          KC_T,
@@ -144,7 +166,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * | Del  |1/CTL |2/ALT |3/GUI |4/SFT |  5   |  6   |7/SFT |8/GUI |9/ALT |0/CTL |  =  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
-     * |  {   |  `   |  £   |  €   |  _   |  ~   |  +   |  -   |  ,   |  .   |  /   |  }  |
+     * |  {   |  ~   |  €   |  £   |  _   |  `   |  +   |  -   |  ,   |  .   |  /   |  }  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |      |      |      |(trns)| MO4  |(trns)|(trns)| MO4  |(trns)|      |      |      |
      * `-----------------------------------------------------------------------------------'
@@ -157,10 +179,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * UK_PIPE = |  (correct | on UK layout)
      * UK_LCBR = {  (correct { on UK layout)
      * UK_RCBR = }  (correct } on UK layout)
-     * UK_GRV  = `  (correct ` on UK layout)
-     * UK_PND  = £  (Shift+3 on UK layout)
-     * UK_EURO = €  (AltGr+4 on UK layout)
-     * UK_TILD = ~  (correct ~ on UK layout)
+     * UK_GRV  = `  (correct ` on UK layout; ~ via Shift+` naturally)
+     * UK_PND  = £  (aligned with the 3 key, matching the physical UK keyboard)
+     * UK_EURO = €  (aligned with the 2 key)
+     * ~ is not needed here — use Shift+UK_GESC or Shift+` from this layer.
      */
     [_SYM] = LAYOUT_ortho_4x12(
         KC_TAB,  KC_EXLM,       UK_AT,         UK_HASH,       KC_DLR,        KC_PERC,
@@ -169,7 +191,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_DEL,  LCTL_T(KC_1),  LALT_T(KC_2),  LGUI_T(KC_3),  LSFT_T(KC_4),  KC_5,
         KC_6,    RSFT_T(KC_7),  RGUI_T(KC_8),  RALT_T(KC_9),  RCTL_T(KC_0),  KC_EQL,
 
-        UK_LCBR, UK_GRV,        UK_PND,        UK_EURO,       KC_UNDS,       UK_TILD,
+        UK_LCBR, UK_TILD,       UK_PND,        UK_EURO,       KC_UNDS,       UK_GRV,
         KC_PLUS, KC_MINS,       KC_COMM,       KC_DOT,        KC_SLSH,       UK_RCBR,
 
         KC_NO,   KC_NO,         KC_NO,         KC_TRNS,       MO(_ADJUST),   KC_TRNS,
