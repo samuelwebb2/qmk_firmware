@@ -173,7 +173,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * | Del  |1/CTL |2/ALT |3/GUI |4/SFT |  5   |  6   |7/SFT |8/GUI |9/ALT |0/CTL |  =  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
-     * |  {   |  ~   |  €   |  £   |  _   |  `   |  +   |  -   |  ,   |  .   |  /   |  }  |
+     * |  {   |  `   |  €   |  £   |  _   |  :   |  +   |  -   |  ,   |  .   |  /   |  }  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |      |      |      |(trns)| MO4  |(trns)|(trns)| MO4  |(trns)|      |      |      |
      * `-----------------------------------------------------------------------------------'
@@ -198,7 +198,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_DEL,  LCTL_T(KC_1),  LALT_T(KC_2),  LGUI_T(KC_3),  LSFT_T(KC_4),  KC_5,
         KC_6,    RSFT_T(KC_7),  RGUI_T(KC_8),  LALT_T(KC_9),  RCTL_T(KC_0),  KC_EQL,
 
-        UK_LCBR, UK_TILD,       UK_PND,        UK_EURO,       KC_UNDS,       UK_GRV,
+        UK_LCBR, UK_GRV,        UK_PND,        UK_EURO,       KC_UNDS,       UK_COLN,
         KC_PLUS, KC_MINS,       KC_COMM,       KC_DOT,        KC_SLSH,       UK_RCBR,
 
         KC_NO,   KC_NO,         KC_NO,         KC_TRNS,       MO(_ADJUST),   KC_TRNS,
